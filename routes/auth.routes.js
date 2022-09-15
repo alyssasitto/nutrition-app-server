@@ -3,6 +3,7 @@ const router = require("express").Router();
 const User = require("../models/User.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { isAuthenticated } = require("../middleware/jwt.middleware");
 
 // Signup post route
 router.post("/signup", (req, res) => {
@@ -104,6 +105,10 @@ router.post("/login", (req, res) => {
 			}
 		})
 		.catch((err) => res.status(500).json({ message: "Internal server error" }));
+});
+
+router.get("/verify", isAuthenticated, (req, res) => {
+	res.status(200).json(req.payload);
 });
 
 module.exports = router;
