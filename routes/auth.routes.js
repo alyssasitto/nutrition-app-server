@@ -1,4 +1,3 @@
-const app = require("../app");
 const router = require("express").Router();
 const User = require("../models/User.model");
 const bcrypt = require("bcryptjs");
@@ -108,6 +107,7 @@ router.post("/login", (req, res) => {
 });
 
 router.get("/verify", isAuthenticated, (req, res) => {
+	console.log(req.headers);
 	res.status(200).json(req.payload);
 });
 

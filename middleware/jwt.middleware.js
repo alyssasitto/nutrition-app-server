@@ -1,27 +1,29 @@
-const jwt = require("jsonwebtoken");
+const { expressjwt: jwt } = require("express-jwt");
 
-let token;
+// Instantiate the JWT token validation middleware
+const isAuthenticated = jwt({
+	secret: process.env.TOKEN_SECRET,
+	algorithms: ["HS256"],
+	requestProperty: "payload",
+	getToken: getTokenFromHeaders,
+});
 
-const isAuthenticated = (req, res, next) => {
+// Function used to extracts the JWT token from the request's 'Authorization' Headers
+function getTokenFromHeaders(req) {
+	// Check if the token is available on the request Headers
 	if (
 		req.headers.authorization &&
 		req.headers.authorization.split(" ")[0] === "Bearer"
 	) {
-		token = req.headers.authorization.split(" ")[1];
+		// Get the encoded token string and return it
+		const token = req.headers.authorization.split(" ")[1];
+		return token;
 	}
 
-	if (token) {
-		jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-			if (err) {
-				res.status(400).json({ message: "You do not have access" });
-			} else {
-				req.payload = decoded;
-				next();
-			}
-		});
-	} else {
-		res.status(500).json({ message: "Internal server error" });
-	}
+	return null;
+}
+
+// Export the middleware so that we can use it to create a protected routes
+module.exports = {
+	isAuthenticated,
 };
-
-module.exports = { isAuthenticated };
