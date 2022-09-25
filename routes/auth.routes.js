@@ -88,6 +88,7 @@ router.post("/login", (req, res) => {
 			const payload = {
 				name: user.name,
 				id: user._id,
+				email: user.email,
 			};
 
 			if (!correctPassword) {
@@ -109,6 +110,21 @@ router.post("/login", (req, res) => {
 router.get("/verify", isAuthenticated, (req, res) => {
 	console.log(req.headers);
 	res.status(200).json(req.payload);
+});
+
+router.put("/edit/name", isAuthenticated, (req, res) => {
+	const { id } = req.payload;
+	const { name } = req.body;
+
+	if (name === "") {
+		return res.status(400).json({ message: "Please enter a name" });
+	}
+
+	User.findByIdAndUpdate(id, { name: name })
+		.then((updatedUser) => {
+			res.status(200).json({ name: name });
+		})
+		.catch((err) => res.status(400).json({ message: "Something went wrong" }));
 });
 
 module.exports = router;

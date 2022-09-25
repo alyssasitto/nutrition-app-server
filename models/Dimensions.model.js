@@ -7,7 +7,7 @@ const dimensionsSchema = new Schema({
 	weight: { type: Number, required: true },
 	gender: { type: String, required: true },
 	age: { type: Number, required: true },
-	user: { type: Schema.Types.ObjectId, ref: "User" },
+	user: { type: Schema.Types.ObjectId, ref: "User", unique: true },
 });
 
 module.exports = model("Dimensions", dimensionsSchema);
