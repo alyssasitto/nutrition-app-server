@@ -112,7 +112,7 @@ router.get("/verify", isAuthenticated, (req, res) => {
 	res.status(200).json(req.payload);
 });
 
-router.put("/edit/name", isAuthenticated, (req, res) => {
+router.post("/edit/name", isAuthenticated, (req, res) => {
 	const { id } = req.payload;
 	const { name } = req.body;
 
@@ -121,10 +121,91 @@ router.put("/edit/name", isAuthenticated, (req, res) => {
 	}
 
 	User.findByIdAndUpdate(id, { name: name })
-		.then((updatedUser) => {
+		.then(() => {
 			res.status(200).json({ name: name });
 		})
 		.catch((err) => res.status(400).json({ message: "Something went wrong" }));
+});
+
+router.post("/edit/email", isAuthenticated, (req, res) => {
+	const { id } = req.payload;
+	const { email } = req.body;
+
+	if (email === "") {
+		return res.status(400).json({ message: "Please enter an email" });
+	}
+
+	const emailRegEx = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+	if (!emailRegEx.test(email)) {
+		res.status(400).json({ message: "Please enter a valid email address." });
+		return;
+	}
+
+	User.findOne({ email })
+		.then((user) => {
+			if (user) {
+				return res.status(400).json({ message: "Email already exists" });
+			}
+
+			User.findByIdAndUpdate(id, { email: email })
+				.then(() => {
+					res.status(200).json({ email: email });
+				})
+				.catch((err) => {
+					console.log(err);
+					res.status(400).json({ message: "Something went wrong" });
+				});
+		})
+		.catch((err) => {
+			console.log(err);
+			res.status(500).json({ message: "Server error" });
+		});
+});
+
+router.post("/edit/password", isAuthenticated, (req, res) => {
+	const { id } = req.payload;
+	const { newPassword, confirmNewPassword } = req.body;
+
+	console.log("HEADERSSSS", req.payload);
+
+	if (newPassword === "" || confirmNewPassword === "") {
+		return res.status(400).json({ message: "Please enter a passsword" });
+	}
+
+	const passwordRegEx = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
+	if (!passwordRegEx.test(newPassword)) {
+		res.status(400).json({
+			message: `Password must include:
+	  . One uppercase letter
+	  . One lowercase letter
+	  . More than 8 characters
+	  . At least one special character`,
+		});
+		return;
+	}
+
+	if (newPassword !== confirmNewPassword) {
+		return res.status(400).json({ message: "Passwords do not match" });
+	}
+
+	User.findById(id)
+		.then((user) => {
+			const salt = bcrypt.genSaltSync(10);
+			const hashedPassword = bcrypt.hashSync(newPassword, salt);
+
+			User.findByIdAndUpdate(id, { password: hashedPassword })
+				.then((user) => {
+					res.status(200).json({ message: "Password updated" });
+				})
+				.catch((err) => {
+					console.log(err);
+					res.status(400).json({ message: "Could not update password" });
+				});
+		})
+		.catch((err) => {
+			console.log(err);
+			res.status(500).json({ message: "Server error" });
+		});
 });
 
 module.exports = router;
