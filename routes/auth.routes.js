@@ -124,7 +124,9 @@ router.post("/edit/name", isAuthenticated, (req, res) => {
 		.then(() => {
 			res.status(200).json({ name: name });
 		})
-		.catch((err) => res.status(400).json({ message: "Something went wrong" }));
+		.catch((err) =>
+			res.status(400).json({ message: "Could not update name." })
+		);
 });
 
 router.post("/edit/email", isAuthenticated, (req, res) => {
@@ -169,23 +171,27 @@ router.post("/edit/password", isAuthenticated, (req, res) => {
 	console.log("HEADERSSSS", req.payload);
 
 	if (newPassword === "" || confirmNewPassword === "") {
-		return res.status(400).json({ message: "Please enter a passsword" });
+		return res.status(400).json({ message: ["Please enter a passsword"] });
 	}
+
+	const passswordRequirements = [
+		"Password must include:",
+		". One uppercase letter",
+		". One lowercase letter",
+		". More than 8 characters",
+		". At least one special character",
+	];
 
 	const passwordRegEx = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
 	if (!passwordRegEx.test(newPassword)) {
 		res.status(400).json({
-			message: `Password must include:
-	  . One uppercase letter
-	  . One lowercase letter
-	  . More than 8 characters
-	  . At least one special character`,
+			message: passswordRequirements,
 		});
 		return;
 	}
 
 	if (newPassword !== confirmNewPassword) {
-		return res.status(400).json({ message: "Passwords do not match" });
+		return res.status(400).json({ message: ["Passwords do not match"] });
 	}
 
 	User.findById(id)

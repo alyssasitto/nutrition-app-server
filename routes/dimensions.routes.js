@@ -1,5 +1,6 @@
 const router = require("express").Router();
 
+const { isAuthenticated } = require("../middleware/jwt.middleware");
 const Dimensions = require("../models/Dimensions.model");
 
 // Route for creating dimensions for user
@@ -49,15 +50,32 @@ router.get("/dimensions", (req, res) => {
 });
 
 // Route for editing dimensions
-router.get("/edit", (req, res) => {
+router.post("/edit/dimensions", (req, res) => {
 	const { id } = req.payload;
+	const { feet, inches, age, weight, gender } = req.body;
 
-	Dimensions.findOne({ user: id })
-		.then((user) => {
-			res.status(200).json({ dimensions: user });
+	console.log(id, feet, inches, age, weight, gender);
+
+	if (
+		feet === "" ||
+		inches === "" ||
+		age === "" ||
+		weight === "" ||
+		gender === ""
+	) {
+		return res.status(400).json({ message: "Please fill out all fields" });
+	}
+
+	Dimensions.findOneAndUpdate(
+		{ user: id },
+		{ feet, inches, age, weight, gender }
+	)
+		.then((dimensions) => {
+			res.status(200).json({ message: "Success" });
 		})
 		.catch((err) => {
 			console.log(err);
+			res.status(400).json({ message: "Could not update dimensions" });
 		});
 });
 
