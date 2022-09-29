@@ -10,18 +10,20 @@ const dimensionsSchema = new Schema({
 	goal: {
 		type: String,
 		enum: [
-			"gain0.5lb",
-			"gain1lb",
-			"gain2lb",
+			"gain-0.5lb",
+			"gain-1lb",
+			"gain-2lb",
 			"maintain",
-			"lose0.5lb",
-			"lose1lb",
-			"lose2lb",
+			"lose-0.5lb",
+			"lose-1lb",
+			"lose-2lb",
 		],
+		required: true,
 	},
 	activityLevel: {
 		type: String,
 		enum: ["not-active", "lightly-active", "active", "very-active"],
+		required: true,
 	},
 	user: { type: Schema.Types.ObjectId, ref: "User", unique: true },
 });
