@@ -33,7 +33,9 @@ router.post("/dimensions", (req, res) => {
 		user: id,
 	})
 		.then((user) => {
-			res.status(200).json({ message: "dimensions created" });
+			res.status(200).json({
+				dimensions: { inches, weight, gender, age, goal, activityLevel },
+			});
 		})
 		.catch((err) => {
 			console.log(err);

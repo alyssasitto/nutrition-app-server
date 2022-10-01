@@ -6,6 +6,7 @@ const macrosSchema = new Schema({
 	protein: Number,
 	carbohydrates: Number,
 	fat: Number,
+	user: { type: Schema.Types.ObjectId, ref: "User", unique: true },
 });
 
 module.exports = model("Macros", macrosSchema);

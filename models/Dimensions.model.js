@@ -22,7 +22,7 @@ const dimensionsSchema = new Schema({
 	},
 	activityLevel: {
 		type: String,
-		enum: ["not-active", "lightly-active", "active", "very-active"],
+		enum: ["sedentary", "lightly-active", "active", "very-active"],
 		required: true,
 	},
 	user: { type: Schema.Types.ObjectId, ref: "User", unique: true },

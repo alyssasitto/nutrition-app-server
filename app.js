@@ -16,4 +16,7 @@ app.use("/", authRoutes);
 const dimensionRoutes = require("./routes/dimensions.routes");
 app.use("/", isAuthenticated, dimensionRoutes);
 
+const macroRoutes = require("./routes/macros.routes");
+app.use("/", isAuthenticated, macroRoutes);
+
 module.exports = app;
