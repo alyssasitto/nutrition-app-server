@@ -88,47 +88,47 @@ router.post("/edit/dimensions", (req, res) => {
 });
 
 // Route for editing goal
-router.post("/edit/goal", (req, res) => {
-	const { id } = req.payload;
-	const { goal } = req.body;
+// router.post("/edit/goal", (req, res) => {
+// 	const { id } = req.payload;
+// 	const { goal } = req.body;
 
-	console.log("this is the goal", goal);
-	console.log("this is the id", id);
+// 	console.log("this is the goal", goal);
+// 	console.log("this is the id", id);
 
-	if (goal === "") {
-		return res.status(400).json({ message: "Please set a goal" });
-	}
+// 	if (goal === "") {
+// 		return res.status(400).json({ message: "Please set a goal" });
+// 	}
 
-	Dimensions.findOneAndUpdate({ user: id }, { goal: goal })
-		.then(() => {
-			res.status(200).json({ message: "Success" });
-		})
-		.catch((err) => {
-			console.log(err);
-			res.status(400).json({ message: "Could not update goal" });
-		});
-});
+// 	Dimensions.findOneAndUpdate({ user: id }, { goal: goal })
+// 		.then(() => {
+// 			res.status(200).json({ message: "Success" });
+// 		})
+// 		.catch((err) => {
+// 			console.log(err);
+// 			res.status(400).json({ message: "Could not update goal" });
+// 		});
+// });
 
-// Route for editing activity level
-router.post("/edit/activity-level", (req, res) => {
-	const { id } = req.payload;
-	const { activityLevel } = req.body;
+// // Route for editing activity level
+// router.post("/edit/activity-level", (req, res) => {
+// 	const { id } = req.payload;
+// 	const { activityLevel } = req.body;
 
-	console.log("THIS IS THE ID", id);
-	console.log("THIS IS THE ACTIVITY LEVEL", activityLevel);
+// 	console.log("THIS IS THE ID", id);
+// 	console.log("THIS IS THE ACTIVITY LEVEL", activityLevel);
 
-	if (activityLevel === "") {
-		return res.status(400).json({ message: "Please choose an activity level" });
-	}
+// 	if (activityLevel === "") {
+// 		return res.status(400).json({ message: "Please choose an activity level" });
+// 	}
 
-	Dimensions.findOneAndUpdate({ user: id }, { activityLevel: activityLevel })
-		.then(() => {
-			res.status(200).json({ message: "Success" });
-		})
-		.catch((err) => {
-			console.log(err);
-			res.status(400).json({ message: "Could not update activity level" });
-		});
-});
+// 	Dimensions.findOneAndUpdate({ user: id }, { activityLevel: activityLevel })
+// 		.then(() => {
+// 			res.status(200).json({ message: "Success" });
+// 		})
+// 		.catch((err) => {
+// 			console.log(err);
+// 			res.status(400).json({ message: "Could not update activity level" });
+// 		});
+// });
 
 module.exports = router;
