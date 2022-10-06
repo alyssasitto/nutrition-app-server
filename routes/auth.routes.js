@@ -3,6 +3,7 @@ const User = require("../models/User.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { isAuthenticated } = require("../middleware/jwt.middleware");
+const { isObjectIdOrHexString } = require("mongoose");
 
 // Signup post route
 router.post("/signup", (req, res) => {
@@ -53,11 +54,13 @@ router.post("/signup", (req, res) => {
 			name,
 			email,
 			password: hashedPassword,
+			logDays: [],
 		})
 			.then((user) => {
 				res.status(200).json({ message: "User created" });
 			})
 			.catch((err) => {
+				console.log(err);
 				res.status(400).json({ message: "Could not create user" });
 			});
 	});

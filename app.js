@@ -19,4 +19,10 @@ app.use("/", isAuthenticated, dimensionRoutes);
 const macroRoutes = require("./routes/macros.routes");
 app.use("/", isAuthenticated, macroRoutes);
 
+const dayRoutes = require("./routes/day.routes");
+app.use("/", isAuthenticated, dayRoutes);
+
+const foodRoutes = require("./routes/food.routes");
+app.use("/", isAuthenticated, foodRoutes);
+
 module.exports = app;
