@@ -23,33 +23,81 @@ router.get("/food/:searchedFood", (req, res) => {
 		});
 });
 
-// Get route for individual item user want to view
-router.post("/food/details", (req, res) => {
-	console.log(req.body.index);
-	console.log(req.body.searchedFood);
-
-	axios
-		.get(
-			`https://api.edamam.com/api/food-database/v2/parser?app_id=${process.env.app_id}&app_key=${process.env.app_key}&ingr=${req.body.searchedFood}`
-		)
-		.then((response) => {
-			console.log(response.data.hints[req.body.index]);
-
-			const foodItem = response.data.hints[req.body.index];
-
-			res.status(200).json({ foodItem });
-		})
-		.catch((err) => res.status(400).json({ message: "Something went wrong" }));
-});
-
 // Post route for adding food to day
 
 router.post("/add-food", (req, res) => {
+	const { id } = req.body;
 	const { date } = req.body;
 	const { foodType } = req.body;
 
 	console.log(req.body);
 
+	User.findById(id)
+		.then((result) => {
+			const day = result.logDays.filter((el, index) => {
+				return el.date === date;
+			});
+
+			if (day.length === 0) {
+				const dayObject = {
+					date: date,
+					breakfast: [],
+					lunch: [],
+					dinner: [],
+				};
+
+				return User.findByIdAndUpdate(
+					{ _id: id },
+					{ $push: { logDays: dayObject } }
+				)
+					.then((result) => {
+						console.log("RESUUUULT", result);
+
+						console.log("hahahaha", result);
+
+						// let newDayIndex;
+
+						// result.logDays.filter((el, index) => {
+						// 	if (el.date === date) {
+						// 		newDayIndex = index;
+						// 	}
+						// });
+						// console.log("THIS IS THE NEW DAY", newDayIndex);
+					})
+					.catch((err) => {
+						console.log(err);
+					});
+			} else {
+				let dayIndex;
+
+				result.logDays.filter((el, index) => {
+					if (el.date === date) {
+						dayIndex = index;
+					}
+				});
+
+				User.findByIdAndUpdate(
+					{ _id: id },
+					{ $push: { [`logDays.${dayIndex}.${foodType}`]: req.body.food } }
+				)
+					.then((result) => {
+						console.log("OMG THI SIS THE RESUKT", result);
+					})
+					.catch((err) => {
+						console.log(err);
+					});
+
+				console.log(result.logDays[dayIndex].breakfast);
+
+				console.log(dayIndex);
+			}
+		})
+
+		.catch((err) => {
+			console.log(err);
+		});
+
+	console.log("this is the id", id);
 	console.log("this is the date", date);
 	console.log("this is the food type", foodType);
 
