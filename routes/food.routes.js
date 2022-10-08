@@ -46,23 +46,24 @@ router.post("/add-food", (req, res) => {
 					dinner: [],
 				};
 
+				if (foodType === "breakfast") {
+					dayObject.breakfast.push(req.body.food);
+				}
+
+				if (foodType === "lunch") {
+					dayObject.lunch.push(req.body.food);
+				}
+
+				if (foodType === "dinner") {
+					dayObject.dinner.push(req.body.food);
+				}
+
 				return User.findByIdAndUpdate(
 					{ _id: id },
 					{ $push: { logDays: dayObject } }
 				)
 					.then((result) => {
-						console.log("RESUUUULT", result);
-
-						console.log("hahahaha", result);
-
-						// let newDayIndex;
-
-						// result.logDays.filter((el, index) => {
-						// 	if (el.date === date) {
-						// 		newDayIndex = index;
-						// 	}
-						// });
-						// console.log("THIS IS THE NEW DAY", newDayIndex);
+						res.status(200).json({ message: "Food added" });
 					})
 					.catch((err) => {
 						console.log(err);
@@ -81,27 +82,24 @@ router.post("/add-food", (req, res) => {
 					{ $push: { [`logDays.${dayIndex}.${foodType}`]: req.body.food } }
 				)
 					.then((result) => {
-						console.log("OMG THI SIS THE RESUKT", result);
+						res.status(200).json({ message: "food has been added" });
 					})
 					.catch((err) => {
 						console.log(err);
 					});
-
-				console.log(result.logDays[dayIndex].breakfast);
-
-				console.log(dayIndex);
 			}
 		})
 
 		.catch((err) => {
 			console.log(err);
 		});
-
-	console.log("this is the id", id);
-	console.log("this is the date", date);
-	console.log("this is the food type", foodType);
-
-	res.status(200).json({ message: "request sent" });
 });
+
+// route to delete food
+// router.post("/delete-food", (req, res) => {
+//   const {id} = req.body;
+// 	const {index} = req.body;
+
+// })
 
 module.exports = router;
