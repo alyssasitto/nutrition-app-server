@@ -8,8 +8,6 @@ router.post("/day", (req, res) => {
 
 	User.findById({ _id: id })
 		.then((user) => {
-			console.log(user);
-
 			const logDay = user.logDays.filter((element) => {
 				return element.date === date;
 			});

@@ -96,10 +96,56 @@ router.post("/add-food", (req, res) => {
 });
 
 // route to delete food
-// router.post("/delete-food", (req, res) => {
-//   const {id} = req.body;
-// 	const {index} = req.body;
+router.post("/delete-food", (req, res) => {
+	const { id } = req.body;
+	const { food } = req.body;
+	const { foodType } = req.body;
+	const { date } = req.body;
+	const { index } = req.body;
 
-// })
+	console.log(id, food, foodType, date, index);
+
+	let dayIndex = 0;
+
+	User.findById({ _id: id })
+		.then((user) => {
+			user.logDays.filter((el, index) => {
+				if (el.date === date) {
+					dayIndex = index;
+				}
+			});
+
+			return User.findByIdAndUpdate(
+				{ _id: id },
+				{ $unset: { [`logDays.${dayIndex}.${foodType}.${index}`]: "" } }
+			);
+		})
+		.then((result) => {
+			return User.findByIdAndUpdate(
+				{ _id: id },
+				{ $pull: { [`logDays.${dayIndex}.${foodType}`]: null } }
+			);
+		})
+		.then((result) => {
+			return User.findById({ _id: id });
+		})
+		.then((result) => {
+			console.log("THIS IS THE RESULT", result.logDays);
+			const logDay = result.logDays.filter((element) => {
+				return element.date === date;
+			});
+
+			if (logDay === []) {
+				return res.status(200).json({ logday: logDay[0] });
+			} else {
+				return res.status(200).json({ logDay: logDay[0] });
+			}
+
+			console.log(logDay);
+		})
+		.catch((err) => {
+			console.log(err);
+		});
+});
 
 module.exports = router;
