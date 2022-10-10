@@ -95,6 +95,64 @@ router.post("/add-food", (req, res) => {
 		});
 });
 
+// route to add custom food
+router.post("/add-custom-food", (req, res) => {
+	const { id } = req.body;
+	const { name } = req.body;
+	const { calories } = req.body;
+	const { fat } = req.body;
+	const { protein } = req.body;
+	const { carbs } = req.body;
+	const { meal } = req.body;
+	const { date } = req.body;
+
+	if (
+		name === "" ||
+		calories === "" ||
+		fat === "" ||
+		protein === "" ||
+		carbs === ""
+	) {
+		return res.status(400).json({ message: "Please fill out all fields" });
+	}
+
+	console.log(id, name, calories, fat, protein, carbs, meal, date);
+
+	const foodObj = {
+		name,
+		calories,
+		fat,
+		protein,
+		carbs,
+	};
+
+	let dayIndex = 0;
+	User.findById({ _id: id })
+		.then((result) => {
+			result.logDays.filter((el, index) => {
+				if (el.date === date) {
+					dayIndex = index;
+				}
+			});
+
+			console.log(dayIndex);
+
+			console.log("THIS ID THDKAD", result.logDays[dayIndex]);
+
+			return User.findByIdAndUpdate(
+				{ _id: id },
+				{ $push: { [`logDays.${dayIndex}.${meal}`]: foodObj } }
+			);
+		})
+		.then((result) => {
+			console.log(result.logDays[dayIndex]);
+			res.status(200).json({ logDay: result.logDays[dayIndex] });
+		})
+		.catch((err) => {
+			console.log(err);
+		});
+});
+
 // route to delete food
 router.post("/delete-food", (req, res) => {
 	const { id } = req.body;
