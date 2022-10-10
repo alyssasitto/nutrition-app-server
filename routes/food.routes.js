@@ -116,8 +116,6 @@ router.post("/add-custom-food", (req, res) => {
 		return res.status(400).json({ message: "Please fill out all fields" });
 	}
 
-	console.log(id, name, calories, fat, protein, carbs, meal, date);
-
 	const foodObj = {
 		name,
 		calories,
@@ -126,27 +124,65 @@ router.post("/add-custom-food", (req, res) => {
 		carbs,
 	};
 
-	let dayIndex = 0;
 	User.findById({ _id: id })
 		.then((result) => {
-			result.logDays.filter((el, index) => {
-				if (el.date === date) {
-					dayIndex = index;
-				}
+			console.log(result);
+
+			const day = result.logDays.filter((el, index) => {
+				return el.date === date;
 			});
 
-			console.log(dayIndex);
+			if (day.length === 0) {
+				const dayObject = {
+					date: date,
+					breakfast: [],
+					lunch: [],
+					dinner: [],
+				};
 
-			console.log("THIS ID THDKAD", result.logDays[dayIndex]);
+				if (meal === "breakfast") {
+					dayObject.breakfast.push(foodObj);
+				}
 
-			return User.findByIdAndUpdate(
-				{ _id: id },
-				{ $push: { [`logDays.${dayIndex}.${meal}`]: foodObj } }
-			);
-		})
-		.then((result) => {
-			console.log(result.logDays[dayIndex]);
-			res.status(200).json({ logDay: result.logDays[dayIndex] });
+				if (meal === "lunch") {
+					dayObject.lunch.push(foodObj);
+				}
+
+				if (meal === "dinner") {
+					dayObject.dinner.push(foodObj);
+				}
+
+				User.findByIdAndUpdate({ _id: id }, { $push: { logDays: dayObject } })
+					.then((result) => {
+						const logDay = result.logDays.filter((el, index) => {
+							return (el.date = date);
+						});
+
+						return res.status(200).json({ logDay: logDay });
+					})
+					.catch((err) => {
+						console.log(err);
+					});
+			} else {
+				let dayIndex;
+
+				result.logDays.filter((el, index) => {
+					if (el.date === date) {
+						dayIndex = index;
+					}
+				});
+
+				User.findByIdAndUpdate(
+					{ _id: id },
+					{ $push: { [`logDays.${dayIndex}.${meal}`]: foodObj } }
+				)
+					.then((result) => {
+						return res.status(200).json({ logDay: result.logDays[dayIndex] });
+					})
+					.catch((err) => {
+						console.log(err);
+					});
+			}
 		})
 		.catch((err) => {
 			console.log(err);
@@ -193,11 +229,7 @@ router.post("/delete-food", (req, res) => {
 				return element.date === date;
 			});
 
-			if (logDay === []) {
-				return res.status(200).json({ logday: logDay[0] });
-			} else {
-				return res.status(200).json({ logDay: logDay[0] });
-			}
+			return res.status(200).json({ logDay: logDay[0] });
 
 			console.log(logDay);
 		})
