@@ -118,10 +118,10 @@ router.post("/add-custom-food", (req, res) => {
 
 	const foodObj = {
 		name,
-		calories,
-		fat,
-		protein,
-		carbs,
+		calories: Math.ceil(Number(calories)),
+		fat: Number(fat),
+		protein: Number(protein),
+		carbs: Number(carbs),
 	};
 
 	User.findById({ _id: id })

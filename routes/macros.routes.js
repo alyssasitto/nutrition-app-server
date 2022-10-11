@@ -120,9 +120,9 @@ router.post("/macros", (req, res) => {
 
 	Macros.create({
 		calories: calories,
-		protein: proteinInCals,
-		carbohydrates: carbsInCals,
-		fat: fatInCals,
+		protein: protein,
+		carbohydrates: carbs,
+		fat: fat,
 		user: id,
 	})
 		.then((macros) => {
@@ -252,9 +252,9 @@ router.post("/edit/macros", (req, res) => {
 		{ user: id },
 		{
 			calories: calories,
-			protein: proteinInCals,
-			carbohydrates: carbsInCals,
-			fat: fatInCals,
+			protein: protein,
+			carbohydrates: carbs,
+			fat: fat,
 		}
 	)
 		.then((macros) => {
@@ -263,6 +263,25 @@ router.post("/edit/macros", (req, res) => {
 		})
 		.catch((err) => {
 			res.status(400).json({ message: "Something went wrong" });
+		});
+});
+
+router.get("/macros", (req, res) => {
+	const { id } = req.payload;
+
+	Macros.findOne({ user: id })
+		.then((result) => {
+			console.log("THIS IS THE RESULT", result);
+
+			if (result === null) {
+				res.status(200).json({ macros: null });
+			} else {
+				res.status(200).json({ macros: result });
+			}
+		})
+		.catch((err) => {
+			console.log(err);
+			res.status(400).json({ message: "no" });
 		});
 });
 

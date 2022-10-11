@@ -12,8 +12,8 @@ router.post("/day", (req, res) => {
 				return element.date === date;
 			});
 
-			if (logDay === []) {
-				return res.status(200).json({ logday: logDay[0] });
+			if (user.logDays.length === 0) {
+				return res.status(200).json({ logDay: null });
 			} else {
 				return res.status(200).json({ logDay: logDay[0] });
 			}
