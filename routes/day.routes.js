@@ -12,7 +12,7 @@ router.post("/day", (req, res) => {
 				return element.date === date;
 			});
 
-			if (user.logDays.length === 0) {
+			if (logDay.length === 0) {
 				return res.status(200).json({ logDay: null });
 			} else {
 				return res.status(200).json({ logDay: logDay[0] });
@@ -20,6 +20,7 @@ router.post("/day", (req, res) => {
 		})
 		.catch((err) => {
 			console.log(err);
+			res.status(400).json({ message: "Something went wrong" });
 		});
 });
 

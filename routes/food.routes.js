@@ -4,12 +4,12 @@ const Day = require("../models/Day.model");
 const User = require("../models/User.model");
 
 // Get route for list of food that matched search
-router.get("/food/:searchedFood", (req, res) => {
+router.get("/search/:searchedFood", (req, res) => {
 	const food = req.params.searchedFood;
 
-	console.log(req.params.searchedFood);
+	console.log("THIS IS THE FOOD", food);
 
-	axios
+	return axios
 		.get(
 			`https://api.edamam.com/api/food-database/v2/parser?app_id=${process.env.app_id}&app_key=${process.env.app_key}&ingr=${food}`
 		)
