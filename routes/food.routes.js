@@ -230,11 +230,78 @@ router.post("/delete-food", (req, res) => {
 			});
 
 			return res.status(200).json({ logDay: logDay[0] });
-
-			console.log(logDay);
 		})
 		.catch((err) => {
 			console.log(err);
+		});
+});
+
+// route for getting logged macros
+router.get("/logged-macros/:date", (req, res) => {
+	const { id } = req.payload;
+	const date = req.params.date;
+
+	User.findById({ _id: id })
+		.then((result) => {
+			console.log("THIS IS THE RESULT", result);
+
+			if (result.logDays.length === 0) {
+				return res.status(200).json({ macros: 0 });
+			} else {
+				const chosenDay = result.logDays.filter((el) => {
+					return el.date === date;
+				});
+
+				console.log("CHOSEDN DAYHFJNGKE", chosenDay);
+
+				let fatGrams = 0;
+				let proteinGrams = 0;
+				let carbGrams = 0;
+				let calories = 0;
+
+				if (chosenDay.length === 0) {
+					return res.status(200).json({ macros: 0 });
+				} else {
+					const breakfast = chosenDay[0].breakfast;
+					const lunch = chosenDay[0].lunch;
+					const dinner = chosenDay[0].dinner;
+
+					if (breakfast.length > 0) {
+						breakfast.map((el) => {
+							fatGrams += el.fat;
+							proteinGrams += el.protein;
+							carbGrams += el.carbs;
+							calories += el.calories;
+						});
+					}
+
+					if (lunch.length > 0) {
+						lunch.map((el) => {
+							fatGrams += el.fat;
+							proteinGrams += el.protein;
+							carbGrams += el.carbs;
+							calories += el.calories;
+						});
+					}
+
+					if (dinner.length > 0) {
+						dinner.map((el) => {
+							fatGrams += el.fat;
+							proteinGrams += el.protein;
+							carbGrams += el.carbs;
+							calories += el.calories;
+						});
+					}
+
+					return res
+						.status(200)
+						.json({ macros: { fatGrams, proteinGrams, carbGrams, calories } });
+				}
+			}
+		})
+		.catch((err) => {
+			console.log(err);
+			res.status(400).json({ message: "Something went wrong" });
 		});
 });
 

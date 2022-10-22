@@ -259,7 +259,7 @@ router.post("/edit/macros", (req, res) => {
 	)
 		.then((macros) => {
 			console.log(macros);
-			res.status(200).json({ message: "macros updateds" });
+			res.status(200).json({ message: "Dimensions updated" });
 		})
 		.catch((err) => {
 			res.status(400).json({ message: "Something went wrong" });

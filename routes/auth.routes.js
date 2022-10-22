@@ -28,11 +28,8 @@ router.post("/signup", (req, res) => {
 	const passwordRegEx = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
 	if (!passwordRegEx.test(password)) {
 		res.status(400).json({
-			message: `Password must include:
-	  . One uppercase letter
-	  . One lowercase letter
-	  . More than 8 characters
-	  . At least one special character`,
+			message:
+				"Password must include: one uppercase letter, one lowercase letter, more than 8 characters, and at least one special character",
 		});
 		return;
 	}
@@ -81,7 +78,7 @@ router.post("/login", (req, res) => {
 		.then((user) => {
 			// If the user doesn't exist send a 404 error
 			if (!user) {
-				res.status(404).json({ message: "User does not exist" });
+				res.status(404).json({ message: "Could not verify credentials" });
 				return;
 			}
 
@@ -125,7 +122,7 @@ router.post("/edit/name", isAuthenticated, (req, res) => {
 
 	User.findByIdAndUpdate(id, { name: name })
 		.then(() => {
-			res.status(200).json({ name: name });
+			res.status(200).json({ name: name, message: "Name updated" });
 		})
 		.catch((err) =>
 			res.status(400).json({ message: "Could not update name." })
@@ -154,7 +151,7 @@ router.post("/edit/email", isAuthenticated, (req, res) => {
 
 			User.findByIdAndUpdate(id, { email: email })
 				.then(() => {
-					res.status(200).json({ email: email });
+					res.status(200).json({ email: email, message: "Password updated" });
 				})
 				.catch((err) => {
 					console.log(err);
@@ -174,15 +171,11 @@ router.post("/edit/password", isAuthenticated, (req, res) => {
 	console.log("HEADERSSSS", req.payload);
 
 	if (newPassword === "" || confirmNewPassword === "") {
-		return res.status(400).json({ message: ["Please enter a passsword"] });
+		return res.status(400).json({ message: "Please fill out both fields" });
 	}
 
 	const passswordRequirements = [
-		"Password must include:",
-		". One uppercase letter",
-		". One lowercase letter",
-		". More than 8 characters",
-		". At least one special character",
+		"Password must include: one uppercase letter, one lowercase letter, more than 8 characters, and at least one special character",
 	];
 
 	const passwordRegEx = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
@@ -194,7 +187,7 @@ router.post("/edit/password", isAuthenticated, (req, res) => {
 	}
 
 	if (newPassword !== confirmNewPassword) {
-		return res.status(400).json({ message: ["Passwords do not match"] });
+		return res.status(400).json({ message: "Passwords do not match" });
 	}
 
 	User.findById(id)
