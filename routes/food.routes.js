@@ -82,7 +82,7 @@ router.post("/add-food", (req, res) => {
 					{ $push: { [`logDays.${dayIndex}.${foodType}`]: req.body.food } }
 				)
 					.then((result) => {
-						res.status(200).json({ message: "food has been added" });
+						res.status(200).json({ message: "Food added" });
 					})
 					.catch((err) => {
 						console.log(err);
