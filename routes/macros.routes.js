@@ -271,8 +271,6 @@ router.get("/macros", (req, res) => {
 
 	Macros.findOne({ user: id })
 		.then((result) => {
-			console.log("THIS IS THE RESULT", result);
-
 			if (result === null) {
 				res.status(200).json({ macros: null });
 			} else {
@@ -280,8 +278,7 @@ router.get("/macros", (req, res) => {
 			}
 		})
 		.catch((err) => {
-			console.log(err);
-			res.status(400).json({ message: "no" });
+			res.status(400).json({ message: "Something went wrong" });
 		});
 });
 

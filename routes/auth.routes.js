@@ -104,7 +104,7 @@ router.post("/login", (req, res) => {
 				return;
 			}
 		})
-		.catch((err) => res.status(500).json({ message: "Internal server error" }));
+		.catch((err) => res.status(500).json({ message: "Something went wrong" }));
 });
 
 router.get("/verify", isAuthenticated, (req, res) => {
@@ -160,7 +160,7 @@ router.post("/edit/email", isAuthenticated, (req, res) => {
 		})
 		.catch((err) => {
 			console.log(err);
-			res.status(500).json({ message: "Server error" });
+			res.status(500).json({ message: "Something went wrong" });
 		});
 });
 
@@ -206,7 +206,7 @@ router.post("/edit/password", isAuthenticated, (req, res) => {
 		})
 		.catch((err) => {
 			console.log(err);
-			res.status(500).json({ message: "Server error" });
+			res.status(500).json({ message: "Something went wrong" });
 		});
 });
 

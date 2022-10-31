@@ -13,6 +13,9 @@ configMiddleware(app);
 const authRoutes = require("./routes/auth.routes");
 app.use("/", authRoutes);
 
+const recipeRoutes = require("./routes/recipe.routes");
+app.use("/", recipeRoutes);
+
 const dimensionRoutes = require("./routes/dimensions.routes");
 app.use("/", isAuthenticated, dimensionRoutes);
 

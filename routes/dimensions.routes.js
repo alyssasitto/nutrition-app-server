@@ -39,7 +39,7 @@ router.post("/dimensions", (req, res) => {
 		})
 		.catch((err) => {
 			console.log(err);
-			res.status(400).json({ message: "something went wrong" });
+			res.status(400).json({ message: "Something went wrong" });
 		});
 });
 

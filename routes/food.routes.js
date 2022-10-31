@@ -11,7 +11,7 @@ router.get("/search/:searchedFood", (req, res) => {
 
 	return axios
 		.get(
-			`https://api.edamam.com/api/food-database/v2/parser?app_id=${process.env.app_id}&app_key=${process.env.app_key}&ingr=${food}`
+			`https://api.edamam.com/api/food-database/v2/parser?app_id=${process.env.nutritionId}&app_key=${process.env.nutritionKey}&ingr=${food}`
 		)
 		.then((response) => {
 			console.log(response.data.hints);
@@ -85,13 +85,13 @@ router.post("/add-food", (req, res) => {
 						res.status(200).json({ message: "Food added" });
 					})
 					.catch((err) => {
-						console.log(err);
+						res.status(400).json({ message: "Could not add food" });
 					});
 			}
 		})
 
 		.catch((err) => {
-			console.log(err);
+			res.status(500).json({ message: "Something went wrong" });
 		});
 });
 
@@ -161,7 +161,7 @@ router.post("/add-custom-food", (req, res) => {
 						return res.status(200).json({ logDay: logDay });
 					})
 					.catch((err) => {
-						console.log(err);
+						res.status(400).json({ message: "Could not add food" });
 					});
 			} else {
 				let dayIndex;
@@ -180,12 +180,12 @@ router.post("/add-custom-food", (req, res) => {
 						return res.status(200).json({ logDay: result.logDays[dayIndex] });
 					})
 					.catch((err) => {
-						console.log(err);
+						res.status(400).json({ message: "Could not add food" });
 					});
 			}
 		})
 		.catch((err) => {
-			console.log(err);
+			res.status(500).json({ message: "Something went wrong" });
 		});
 });
 
@@ -232,7 +232,7 @@ router.post("/delete-food", (req, res) => {
 			return res.status(200).json({ logDay: logDay[0] });
 		})
 		.catch((err) => {
-			console.log(err);
+			return res.status(400).json({ message: "Something went wrong" });
 		});
 });
 
@@ -301,7 +301,7 @@ router.get("/logged-macros/:date", (req, res) => {
 		})
 		.catch((err) => {
 			console.log(err);
-			res.status(400).json({ message: "Something went wrong" });
+			res.status(500).json({ message: "Something went wrong" });
 		});
 });
 
