@@ -11,7 +11,8 @@ module.exports = (app) => {
 
 	app.use(
 		cors({
-			orgin: ["http://localhost:3000"],
+			credentials: true,
+			orgin: process.env.ORIGIN || "http://localhost:3000",
 		})
 	);
 
