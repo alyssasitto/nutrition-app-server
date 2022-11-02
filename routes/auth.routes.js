@@ -3,7 +3,6 @@ const User = require("../models/User.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { isAuthenticated } = require("../middleware/jwt.middleware");
-const { isObjectIdOrHexString } = require("mongoose");
 
 // Signup post route
 router.post("/signup", (req, res) => {

@@ -7,8 +7,7 @@ const { isAuthenticated } = require("./middleware/jwt.middleware");
 
 require("./db/index");
 
-const configMiddleware = require("./config/index");
-configMiddleware(app);
+require("./config")(app);
 
 const authRoutes = require("./routes/auth.routes");
 app.use("/", authRoutes);
